@@ -1,24 +1,25 @@
 # Part 1
+from pathlib import Path
 import re
 
-file_path = 'december-3rd-input'
+file_path = Path('December 3rd/december-3rd-input')
 
-with open(file_path, 'r') as file:
-    corrupted_memory = file.read()
+corrupted_memory = file_path.read_text()
 
 pattern = r"mul\((\d+),(\d+)\)"
 matches = re.findall(pattern, corrupted_memory)
+
 total_sum = sum(int(x) * int(y) for x, y in matches)
 
-print(total_sum)
+print(f"Total sum: {total_sum}")
 
 # Part 2
+from pathlib import Path
 import re
 
-file_path = 'december-3rd-input'
+file_path = Path('December 3rd/december-3rd-input')
 
-with open(file_path, 'r') as file:
-    corrupted_memory = file.read()
+corrupted_memory = file_path.read_text()
 
 pattern = r"(do\(\))|(don't\(\))|mul\((\d+),(\d+)\)"
 matches = re.findall(pattern, corrupted_memory)
@@ -34,4 +35,4 @@ for match in matches:
     elif enabled and match[2] and match[3]:
         total_sum += int(match[2]) * int(match[3])
 
-print(total_sum)
+print(f"Total sum of enabled multiplications: {total_sum}")
