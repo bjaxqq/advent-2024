@@ -2,7 +2,7 @@ import os
 import requests
 import datetime
 
-session_token = '{Enter your cookies session ID here}'
+session_token = '53616c7465645f5fe48e0c08228e0c80365875bfd7ec673976eb02c722e91b0a67580b93bd62899245a566cb86df3203308657ad1a3ef39af44ff4a96d70846f'
 
 base_folder = os.path.expanduser('~/Developer/advent-2024')
 
