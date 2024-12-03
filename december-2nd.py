@@ -1,13 +1,7 @@
 # Part 1
-# Steps:
-# 1. Parse each line into lists of integers
-# 2. Make sure the sequence is either increasing or decreasing
-# 3. Make sure differences are between 1 and 3
-# 4. Count lines that match safety criteria
-# 5. Print result
+file_path = 'december-2nd-input'
 
-# Code:
-with open('december-2nd-input.txt', 'r') as file:
+with open(file_path, 'r') as file:
     data = file.readlines()
 
 reports = [list(map(int, line.split())) for line in data]
@@ -26,16 +20,9 @@ safe_count = sum(is_safe(report) for report in reports)
 print(f"Number of safe reports: {safe_count}")
 
 # Part 2
-# Steps:
-# 1. Parse each line into lists of integers
-# 2. Make sure the sequence is either increasing or decreasing
-# 3. Make sure differences are between 1 and 3 
-# 4. If a report is not in the safety criteria then iterate through each level to remove it and double check it is safe
-# 5. Update existing function to work with dampener
-# 6. Print result
+file_path = 'december-2nd-input'
 
-# Code:
-with open('december-2nd-input.txt', 'r') as file:
+with open(file_path, 'r') as file:
     data = file.readlines()
 
 reports = [list(map(int, line.split())) for line in data]
