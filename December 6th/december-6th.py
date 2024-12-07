@@ -1,7 +1,7 @@
 # Part 1
 from pathlib import Path
 
-file_path = Path('december-6th-input.txt')
+file_path = Path('December 6th/december-6th-input.txt')
 
 lab_map = [list(line.strip()) for line in file_path.read_text().splitlines()]
 
