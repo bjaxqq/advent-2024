@@ -1,40 +1,82 @@
-# Part 1
 from pathlib import Path
 
-file_path = Path('December 6th/december-6th-input.txt')
+def parse_input(file_path):
+    with open(file_path, 'r') as f:
+        lines = f.read().splitlines()
 
-lab_map = [list(line.strip()) for line in file_path.read_text().splitlines()]
+    grid = []
+    start_pos = None
+    direction = None
 
-DIRECTIONS = {'^': (-1, 0), 'v': (1, 0), '<': (0, -1), '>': (0, 1)}
-TURN_RIGHT = {'^': '>', '>': 'v', 'v': '<', '<': '^'}
+    directions = {'^': (0, -1), '>': (1, 0), 'v': (0, 1), '<': (-1, 0)}
 
-for r, row in enumerate(lab_map):
-    for c, cell in enumerate(row):
-        if cell in DIRECTIONS:
-            guard_start = (r, c)
-            guard_dir = cell
-            break
+    for y, line in enumerate(lines):
+        row = []
+        for x, char in enumerate(line):
+            if char in directions:
+                start_pos = (x, y)
+                direction = directions[char]
+                row.append('.')
+            else:
+                row.append(char)
+        grid.append(row)
 
-def simulate_patrol(lab_map, guard_start, guard_dir):
-    rows, cols = len(lab_map), len(lab_map[0])
-    guard_pos = guard_start
-    visited_positions = set()
-    visited_positions.add(guard_pos)
-    
+    return grid, start_pos, direction
+
+def move_guard(grid, position, direction):
+    x, y = position
+    dx, dy = direction
+    new_position = (x + dx, y + dy)
+
+    if not (0 <= new_position[1] < len(grid) and 0 <= new_position[0] < len(grid[0])):
+        return position, direction, False
+
+    if grid[new_position[1]][new_position[0]] == '#':
+        direction = (dy, -dx)
+        return position, direction, True
+
+    return new_position, direction, True
+
+def simulate_path(grid, start_pos, direction):
+    visited = set()
+    position = start_pos
+
     while True:
-        dr, dc = DIRECTIONS[guard_dir]
-        next_pos = (guard_pos[0] + dr, guard_pos[1] + dc)
-        
-        if not (0 <= next_pos[0] < rows and 0 <= next_pos[1] < cols):
+        visited.add(position)
+        position, direction, on_map = move_guard(grid, position, direction)
+        if not on_map:
             break
-        
-        if lab_map[next_pos[0]][next_pos[1]] == '#':
-            guard_dir = TURN_RIGHT[guard_dir]
-        else:
-            guard_pos = next_pos
-            visited_positions.add(guard_pos)
-    
-    return len(visited_positions)
 
-result_part1 = simulate_patrol(lab_map, guard_start, guard_dir)
-print(f"Distinct positions visited by the guard: {result_part1}")
+    return visited
+
+def find_loop_positions(grid, start_pos, direction):
+    loop_positions = set()
+    original_grid = [row[:] for row in grid]
+
+    for y in range(len(grid)):
+        for x in range(len(grid[0])):
+            if (x, y) == start_pos or grid[y][x] != '.':
+                continue
+
+            grid[y][x] = '#'
+            visited = simulate_path(grid, start_pos, direction)
+
+            if len(visited) == len(simulate_path(grid, start_pos, direction)):
+                loop_positions.add((x, y))
+
+            grid = [row[:] for row in original_grid]
+
+    return loop_positions
+
+def main():
+    file_path = 'December 6th/december-6th-input.txt'
+    grid, start_pos, direction = parse_input(file_path)
+
+    visited_positions = simulate_path(grid, start_pos, direction)
+    print(f"Total visited positions: {len(visited_positions)}")
+
+    loop_positions = find_loop_positions(grid, start_pos, direction)
+    print(f"Total loop-causing positions: {len(loop_positions)}")
+
+if __name__ == "__main__":
+    main()
